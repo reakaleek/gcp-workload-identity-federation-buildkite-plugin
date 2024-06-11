@@ -7,11 +7,6 @@ if [[ -z "${BUILDKITE_PLUGIN_GCP_WORKLOAD_IDENTITY_FEDERATION_AUDIENCE:-}" ]]; t
   exit 1
 fi
 
-if [[ -z "${BUILDKITE_PLUGIN_GCP_WORKLOAD_IDENTITY_FEDERATION_SERVICE_ACCOUNT:-}" ]]; then
-  echo "🚨 Missing 'service-account' plugin configuration"
-  exit 1
-fi
-
 # Create a temporary directory with both BSD and GNU mktemp
 TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'buildkiteXXXX')
 
