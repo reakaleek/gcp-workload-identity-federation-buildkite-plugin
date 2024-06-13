@@ -6,17 +6,20 @@ set -euo pipefail
 TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'buildkiteXXXX')
 
 
-HASH=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ print $3 }' | sha256sum | cut -c1-27)
+
+echo "~~~ :buildkite: Requesting OIDC token from Buildkite"
+
+HASH=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ printf $3 }' | sha256sum | cut -c1-27)
 PROJECT_NUMBER="8560181848"
 WORKLOAD_IDENTITY_POOL_ID="buildkite"
 WORKLOAD_IDENTITY_PROVIDER_ID="repo-${HASH}"
 AUDIENCE="//iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${WORKLOAD_IDENTITY_POOL_ID}/providers/${WORKLOAD_IDENTITY_PROVIDER_ID}"
 
-echo "~~~ :buildkite: Requesting OIDC token from Buildkite"
 
 buildkite-agent oidc request-token --audience "$AUDIENCE" --lifetime "${BUILDKITE_PLUGIN_GCP_WORKLOAD_IDENTITY_FEDERATION_LIFETIME:-1800}" > "$TMPDIR"/token.json
 echo "${WORKLOAD_IDENTITY_PROVIDER_ID}"
 echo "${BUILDKITE_REPO}"
+echo "${AUDIENCE}"
 
 echo "~~~ :gcloud: Configuring Google Cloud credentials"
 
