@@ -7,10 +7,6 @@ requirements:
   - buildkite-agent
 configuration:
   properties:
-    audience:
-      type: string
     lifetime:
       type: number
-  required:
-    - audience
   additionalProperties: false
